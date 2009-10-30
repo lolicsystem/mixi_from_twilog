@@ -1,0 +1,16 @@
+2009-10-30  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* 一応の完成
+	- twilogから取得した内容を日記に挿入
+
+	* twilogへ接続
+	- 「t」を押すと
+
+	* 日記編集テキストボックスに挿入
+	- 「t」を押すと
+
+	* 適当なイベント設定
+	- 「t」を押すとダイアログが出る、とか
+
+	* favicon表示
+	- twitterの「t」を mixi日記編集画面に表示
