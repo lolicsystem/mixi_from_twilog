@@ -1,3 +1,12 @@
+2009-10-31  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* アイコン作成 (完了)
+	- サイズは 22x22、gifまたはpngで。
+	- dataスキーム作成は以下で。
+	  http://software.hixie.ch/utilities/cgi/data/data
+	- dataスキームのRFCは、以下。
+	  http://www.faqs.org/rfcs/rfc2397.html
+
 2009-10-30  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* 一応の完成
@@ -12,5 +21,5 @@
 	* 適当なイベント設定
 	- 「t」を押すとダイアログが出る、とか
 
-	* favicon表示
+	* favicon表示 (20091031完了)
 	- twitterの「t」を mixi日記編集画面に表示
