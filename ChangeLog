@@ -1,3 +1,16 @@
+2009-11-01  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* mixi_from_twilog.user.js: v0.2
+	- branch: test_091101
+	- "t" アイコンを押すと、ユーザー lolicsystem の 2009/11/01 の
+	  twilogページのHTMLソースが、そのまま textarea に貼り付けられる状
+	  態。
+	- あとは、
+	  ・ ユーザ名の指定
+	  ・ 日付の自動設定
+	  ・ get したソースを加工して、体裁を整える
+	  ができればOK？
+
 2009-10-31  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* mixi_from_twilog.user.js: v0.1

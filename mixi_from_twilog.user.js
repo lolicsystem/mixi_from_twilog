@@ -3,7 +3,6 @@
 // @namespace     http://github.com/lolicsystem
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl?id=*
-// @include       http://mixi.jp/view_diary.pl?id=*
 // @author        Chiemimaru Kai (lolicsystem)
 // @version       0.2
 // ==/UserScript==
@@ -37,19 +36,42 @@
         return null;
     }
 
-    // On click event
+    // Get twitter log from twilog.
     //
-    function insert_twilog() {
-	alert("実際にはここでtwilogから取得した文字列が挿入される");
+    function get_twilog() {
+        var twilog_text;
+        GM_xmlhttpRequest({
+            method : "GET",
+            url    : "http://twilog.org/lolicsystem/date-091101/asc-nomen",
+            // 実際は、日付に合わせて URI を変更する ↑
+            onload : function(r) {
+                if (r.status == 200) {
+                    var d = document.createElement('div');
+                    twilog_text = r.responseText;
+                    // 実際は、見やすい様に加工する（今は、ソースそのまま）
+                } else {
+                    twilog_text = '';
+                }
+                insert_twilog(twilog_text);
+            }
+        });
+        return ;
+    }
+
+    // Insert log into textarea.
+    //
+    function insert_twilog(text) {
+        var ta = $X("//textarea[@id='diaryBody']")[0];
+        ta.value = ta.value + text;
     }
 
     // Create twitter icon image
     //
     function twitter_img() {
-	var img = document.createElement('img');
-	var data = 'data:image/gif;base64,'+
+        var img = document.createElement('img');
+        var data = 'data:image/gif;base64,'+
             'R0lGODlhFgAWAMQAAHXV%2FNf0%2F%2FX09eb4%2F4ba%2Fdvb3GzS%2FMjIyajm'+
-	    '%2F%2Brp6fHx8eLi4%2Fj4%2BNLR0%2FP8%2F%2FHu7rzs%2Fv78%2B%2Fz6%2Bf'+
+            '%2F%2Brp6fHx8eLi4%2Fj4%2BNLR0%2FP8%2F%2FHu7rzs%2Fv78%2B%2Fz6%2Bf'+
             'v39%2BDf4fn9%2F8vLy%2Fn5%2Bfv7%2B%2B7u7v39%2Fe%2Fv7%2Fr6%2Bvz8%2'+
             'FP%2F%2F%2F8zMzCH5BAAAAAAALAAAAAAWABYAAAX%2FoPdZZGlaX6qm4qK9cCy%'+
             '2F3pJiXa7vfP7eusQiQcz0fJoRB4PJPDyDgafArFZ%2FnwuHQ9FAAICAgMJRKLbb'+
@@ -58,31 +80,30 @@
             'S0DCkCDAIFEoIEAxUOFRUSFMzMy3YUEwGqBOLiA5d2Atx2BR6CoKKk5ylmCmMZXq'+
             'yUEBEf8%2FJmdg0WeHAQoKAhDw0SmfFHz86CAxAjQmwgoN%2BHDRgzaty4MUWBDC'+
             'BDihwZssAHEStSBapc4SEEADs%3D';
-	img.src = data;
-	img.width = 22;
-	img.height = 22;
-	return img;
+        img.src = data;
+        img.width = 22;
+        img.height = 22;
+        return img;
     }
 
     // Create anchor
     //
     function twitter_a() {
-	var a = document.createElement('a');
-	a.title = 'twilog挿入';
-	a.href = 'javascript:void();';
-	a.appendChild(twitter_img());
-	return a;
+        var a = document.createElement('a');
+        a.title = 'twilog挿入';
+        a.href = 'javascript:void(0);';
+        a.appendChild(twitter_img());
+        return a;
     }
 
-    // display twitter icon
+    // Add twitter icon to the page
     //
     var target = $X("//div[@class='txtEditArea']")[0];
     var a = twitter_a();
     a.addEventListener('click',
-		       function () {
-			   insert_twilog();
-		       },
-		       false);
-    target.appendChild(a);
-
+                       function () {
+                           get_twilog();
+                       },
+                       false);
+    target.insertBefore(a, target.firstChild);
 })();
