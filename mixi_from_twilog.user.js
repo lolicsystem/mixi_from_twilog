@@ -4,10 +4,37 @@
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl?id=*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.2
+// @version       0.3
 // ==/UserScript==
 
 (function () {
+
+    // Set your twitter name.
+    //
+    var twitter_name = 'lolicsystem';
+
+    // Make yesterday string
+    //
+    function yesterday() {
+        var uYear, uMon, uDate;
+        var nt = new Date();
+        nt.setTime(nt.getTime() - 86400000);
+
+        uYear = ("00" + (nt.getYear() - 100).toString()).slice(-2);
+        uMon  = ("00" + (nt.getMonth() + 1).toString()).slice(-2);
+        uDate = ("00" + nt.getDate() .toString()).slice(-2);
+        var uYesterday = uYear + uMon + uDate;
+        return uYesterday;
+    }
+
+    // Make twilog URL
+    //
+    function twilog_url() {
+        var url;
+        url = "http://twilog.org/" + twitter_name +
+              "/date-" + yesterday() + "/asc-nomen";
+        return url;
+    }
 
     // cho45's $X (http://lowreal.net/logs/2006/03/16/1)
     //
@@ -42,11 +69,9 @@
         var twilog_text;
         GM_xmlhttpRequest({
             method : "GET",
-            url    : "http://twilog.org/lolicsystem/date-091101/asc-nomen",
-            // 実際は、日付に合わせて URI を変更する ↑
+            url    : twilog_url(),
             onload : function(r) {
                 if (r.status == 200) {
-                    var d = document.createElement('div');
                     twilog_text = r.responseText;
                     // 実際は、見やすい様に加工する（今は、ソースそのまま）
                 } else {

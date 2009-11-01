@@ -1,6 +1,9 @@
 2009-11-01  Chiemimaru Kai  <lolicsystem@gmail.com>
 
-	* mixi_from_twilog.user.js: v0.2
+	* v0.3
+	- 昨日の日付を自動取得して対応するログを取得するようにした。
+
+	* v0.2
 	- branch: test_091101
 	- "t" アイコンを押すと、ユーザー lolicsystem の 2009/11/01 の
 	  twilogページのHTMLソースが、そのまま textarea に貼り付けられる状
@@ -13,6 +16,6 @@
 
 2009-10-31  Chiemimaru Kai  <lolicsystem@gmail.com>
 
-	* mixi_from_twilog.user.js: v0.1
+	* v0.1
 	- とりあえず "t" アイコンを表示するだけのスケルトン
 
