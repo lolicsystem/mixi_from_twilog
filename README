@@ -16,8 +16,12 @@ twitter でのつぶやきが挿入されます。
 また、スクリプトの 15 行目の変数 twitter_name に、ご自分の twitter name
 を記入してから使用して下さい。
 
+※ twitter_name の設定を対話的に行うように改良する予定です。詳細は、
+   ToDo を参照して下さい。
+
+
 
 本スクリプトの詳細は、はてなダイアリーに記載する予定です。
 
-Tue Nov  3 03:54:39 JST 2009
-lolicsyste / Chiemimaru Kai
+Tue Nov  3 05:32:07 JST 2009
+lolicsystem / Chiemimaru Kai

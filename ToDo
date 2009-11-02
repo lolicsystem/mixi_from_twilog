@@ -1,3 +1,17 @@
+2009-11-03  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* twitter_nameの対話的取得
+	- ユーザの twitter_name は、GM_setValue を使って、pref.js 中に格納
+	  するようにする。
+	- まず、GM_getValue で、twitter_name の取得を試みる。
+	- 失敗した場合、textarea にtwitter_name設定を案内する表示を出す。
+	- ユーザに、twitter_name を、上部の「日記タイトル入力欄」に入力さ
+	  せる。そして「ｔ」ボタンを押させる。
+	- 入力欄から twitter_name を取得し、twilog への接続を試みる。
+	- 失敗した場合、「有効なtwitter_nameでは無い」か「twilogに登録して
+	  いない」かのどちらかである旨、案内を出して終わり。
+	- 接続に成功した場合、GM_setValue でその twitter_name を永続化する。
+
 2009-11-01  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* 取得するログのユーザー名の指定 (暫定完了)
