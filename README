@@ -13,8 +13,11 @@ twitter でのつぶやきが挿入されます。
 なお、本機能は、twilog に大きく依存していますので、最初に twilog の使用
 登録を行う必要があります(http://twilog.org を参照して下さい)。
 
+また、スクリプトの 15 行目の変数 twitter_name に、ご自分の twitter name
+を記入してから使用して下さい。
+
 
 本スクリプトの詳細は、はてなダイアリーに記載する予定です。
 
-Tue Nov  3 03:38:26 JST 2009
+Tue Nov  3 03:54:39 JST 2009
 lolicsyste / Chiemimaru Kai

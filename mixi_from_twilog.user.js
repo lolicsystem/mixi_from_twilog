@@ -4,14 +4,15 @@
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.4
+// @version       0.4.1
 // ==/UserScript==
 
 (function () {
 
     // Set your twitter name.
     //
-    var twitter_name = 'lolicsystem';
+    // var twitter_name = 'yourtwittername';
+    var twitter_name = '';      // <== set your twitter name !!!
 
     // Make yesterday string
     //
