@@ -2,9 +2,9 @@
 // @name          mixi from twilog
 // @namespace     http://github.com/lolicsystem
 // @description   mixi from twilog
-// @include       http://mixi.jp/add_diary.pl?id=*
+// @include       http://mixi.jp/add_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.3
+// @version       0.4
 // ==/UserScript==
 
 (function () {
@@ -72,10 +72,9 @@
             url    : twilog_url(),
             onload : function(r) {
                 if (r.status == 200) {
-                    twilog_text = r.responseText;
-                    // 実際は、見やすい様に加工する（今は、ソースそのまま）
+                    twilog_text = reformat_twilog(r.responseText);
                 } else {
-                    twilog_text = '';
+                    twilog_text = {title:'', text:''};
                 }
                 insert_twilog(twilog_text);
             }
@@ -83,11 +82,38 @@
         return ;
     }
 
+    // reformat twilog source
+    //
+    function reformat_twilog(source) {
+        var text = '';
+        var LF = String.fromCharCode(10); // 改行コード (LF)
+        var d = document.createElement('div');
+        d.innerHTML = source;
+        var ti = $X(".//h3[@class='bar-main2']", d)[0]
+                 .innerHTML.split(LF)[0]
+                 .replace(/ */gi, '') + ' のつぶやき';
+        var t = $X(".//p[@class='tl-text']", d);
+        var p = $X(".//p[@class='tl-posted']/a", d);
+        for (var i = 0; i < t.length; i++) {
+            text = text +
+                   p[i].innerHTML + '\n' +
+                   t[i].innerHTML.replace(/<\/?[^>]+>/gi, '') + '\n\n';
+        }
+        text = text +
+            '--------\n' +
+            '※ Powered by "mixi_from_twilog.user.js" !!\n' +
+            '　 (http://github.com/lolicsystem/mixi_from_twilog)';
+
+        return {title:ti, text:text};
+    }
+
     // Insert log into textarea.
     //
     function insert_twilog(text) {
+        var ti = $X("//input[@class='editareaWidth']")[0];
         var ta = $X("//textarea[@id='diaryBody']")[0];
-        ta.value = ta.value + text;
+        ti.value = ti.value + text.title;
+        ta.value = ta.value + text.text;
     }
 
     // Create twitter icon image

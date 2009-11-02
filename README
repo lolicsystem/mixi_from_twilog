@@ -1,0 +1,20 @@
+This is a greasemonkey script to gather one day's twitter by the web
+service named "twilog", and to insert it in the mixi diary.
+
+これは、twitter での1日分の発言を、twilog (http://twilog.org/) を用いて
+収集し、それを mixi の日記編集画面に挿入する Greasemonkey スクリプトです。
+
+本スクリプトを、Firefox の Greasemonkey アドオンにインストールすると、
+mixiの「日記を書く」ページに、twitter のアイコンが現れます。
+
+それをクリックすると、日記のタイトル、および日記の内容に、昨日1日分の、
+twitter でのつぶやきが挿入されます。
+
+なお、本機能は、twilog に大きく依存していますので、最初に twilog の使用
+登録を行う必要があります(http://twilog.org を参照して下さい)。
+
+
+本スクリプトの詳細は、はてなダイアリーに記載する予定です。
+
+Tue Nov  3 03:38:26 JST 2009
+lolicsyste / Chiemimaru Kai

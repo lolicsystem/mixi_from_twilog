@@ -1,3 +1,10 @@
+2009-11-03  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* v0.4
+	- 取得したログを整形。タイトルも挿入するようにした。
+	- 一応の完成。
+	- twitter name を対話的に設定できるようにしたいが…。
+
 2009-11-01  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* v0.3
