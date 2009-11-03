@@ -1,6 +1,6 @@
 2009-11-03  Chiemimaru Kai  <lolicsystem@gmail.com>
 
-	* twitter_nameの対話的取得(test_091103 での方法)
+	* twitter_nameの対話的取得 (20091103完了)
 	- inputフィールド tname と date を用意する。
 	- ユーザの twitter_name は、GM_setValue を使って、pref.js 中に格納
 	  するようにする。

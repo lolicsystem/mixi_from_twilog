@@ -1,5 +1,8 @@
 2009-11-03  Chiemimaru Kai  <lolicsystem@gmail.com>
 
+	* v0.6
+	- twitter_name永続化。
+
 	* v0.5
 	- twitter_nameと日付用のinputフィールドを設けた。
 	- twitter_nameはまだ決め撃ち (lolicsystem のまま)

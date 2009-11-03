@@ -4,7 +4,7 @@
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.5
+// @version       0.6
 // ==/UserScript==
 
 (function () {
@@ -94,7 +94,7 @@
                           'margin-left: 5px;' +
                           'display: table-cell;' +
                           'vertical-align: top;';
-        e.value = 'lolicsystem';
+        e.value = GM_getValue("twitter_name", "");
         return e;
     }
 
@@ -137,6 +137,7 @@
             onload : function(r) {
                 if (r.status == 200) {
                     twilog_text = reformat_twilog(r.responseText);
+                    GM_setValue("twitter_name", tn.value);
                 } else {
                     twilog_text = {title:'', text:''};
                 }
