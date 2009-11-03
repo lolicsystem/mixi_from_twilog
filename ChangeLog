@@ -1,5 +1,12 @@
 2009-11-03  Chiemimaru Kai  <lolicsystem@gmail.com>
 
+	* v0.5
+	- twitter_nameと日付用のinputフィールドを設けた。
+	- twitter_nameはまだ決め撃ち (lolicsystem のまま)
+
+	* test_091103 (branch)
+	- twitter_name と 日付用の input フィールドを試すためのブランチ
+	
 	* v0.4.1
 	- twitter_name が lolicsystem のままだったのを修正。
 	- Config::Pit のように、スクリプトと ID/PW を分ける標準的な仕組みっ

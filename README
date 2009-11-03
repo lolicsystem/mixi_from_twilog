@@ -1,27 +1,60 @@
 This is a greasemonkey script to gather one day's twitter by the web
 service named "twilog", and to insert it in the mixi diary.
 
-これは、twitter での1日分の発言を、twilog (http://twilog.org/) を用いて
-収集し、それを mixi の日記編集画面に挿入する Greasemonkey スクリプトです。
 
-本スクリプトを、Firefox の Greasemonkey アドオンにインストールすると、
-mixiの「日記を書く」ページに、twitter のアイコンが現れます。
+【これは何か】
+    これは、twitter での1日分の発言を、twilog (http://twilog.org/) を
+    用いて収集し、それを mixi の日記編集画面に挿入するための、
+    Greasemonkey スクリプトです。
 
-それをクリックすると、日記のタイトル、および日記の内容に、昨日1日分の、
-twitter でのつぶやきが挿入されます。
+    mixiユーザーで、ご自分の日記に「1日分の」twitterでのつぶやきを書き
+    込みたいときなどに便利です。
 
-なお、本機能は、twilog に大きく依存していますので、最初に twilog の使用
-登録を行う必要があります(http://twilog.org を参照して下さい)。
 
-また、スクリプトの 15 行目の変数 twitter_name に、ご自分の twitter name
-を記入してから使用して下さい。
+【使用にあたっての前提条件】
+    (1) Greasemonkey スクリプトを扱える Firefox もしくはそれに類するブ
+        ラウザを使用していること（当たり前ですね）、
 
-※ twitter_name の設定を対話的に行うように改良する予定です。詳細は、
-   ToDo を参照して下さい。
+    (2) twitter でのつぶやきを公開している（「鍵」をかけていない）こと、
+
+
+    (3) twitter のつぶやきを日ごとにまとめてくれる Web サービスである、
+        「ついろぐ (http://twilog.org/)」を利用していること、
+
+    を、前提としている Greasemonkey スクリプトです。
+
+
+【インストールすると】
+    本スクリプトを、Firefox の Greasemonkey にインストールすると、mixi
+    の「日記を書く」ページに、twitter を示す「ｔ」ボタンが現れます。
+
+    その右横の入力フォームに（あなたの）twitterのユーザー名を入力して
+    下さい。一度入力すると、本スクリプトはそのユーザー名を保存しますの
+    で、次回使用時以降は入力する必要はありません。
+    （※ v0.5 時点未実装）
+
+    そのさらに右横の入力フォームには「昨日の日付」を表す6桁の数字が入
+    力されています。
+
+    つまり、こんな状態になっています。
+
+           　　┌─┐┌─────────┐┌────┐
+               │ｔ││twitterユーザー名 ││ 091103 │
+               └─┘└─────────┘└────┘
+
+    その状態で「ｔ」ボタンをクリックすると、指定したユーザの、指定した
+    日、１日分のつぶやきを「ついろぐ (http://twilog.org/)」から取得し、
+    その内容を日記の編集画面に挿入します。
+
+    ユーザー名に誤りがあったり、ついろぐを使用していなかったり、日付に
+    誤りがあった場合には、何もしません（メッセージも出しません）。
 
 
 
 本スクリプトの詳細は、はてなダイアリーに記載する予定です。
 
-Tue Nov  3 05:32:07 JST 2009
+Tue Nov  3 18:26:54 JST 2009
 lolicsystem / Chiemimaru Kai
+
+http://d.hatena.ne.jp/lolicsystem
+email:lolicsystem@gmail.com

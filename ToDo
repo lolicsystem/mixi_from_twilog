@@ -1,6 +1,18 @@
 2009-11-03  Chiemimaru Kai  <lolicsystem@gmail.com>
 
-	* twitter_nameの対話的取得
+	* twitter_nameの対話的取得(test_091103 での方法)
+	- inputフィールド tname と date を用意する。
+	- ユーザの twitter_name は、GM_setValue を使って、pref.js 中に格納
+	  するようにする。
+	- まず、GM_getValue で、twitter_name を取得し、tname に表示する。
+	- 失敗した場合、tname には '' を表示。
+	- date には、昨日の日付を計算して表示。
+	- 「ｔ」ボタンが押された時点の、tname と date に入力されている値を
+	  元に、twilog.org に接続。
+	- 接続が成功すれば、tname の内容を、GM_setValus を用いて永続化。
+	- 接続が失敗すれば、何もしない（もしくは、alert 表示）
+
+	* twitter_nameの対話的取得 (不採用)
 	- ユーザの twitter_name は、GM_setValue を使って、pref.js 中に格納
 	  するようにする。
 	- まず、GM_getValue で、twitter_name の取得を試みる。
