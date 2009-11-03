@@ -3,8 +3,8 @@ service named "twilog", and to insert it in the mixi diary.
 
 
 【これは何か】
-    これは、twitter での1日分の発言を、twilog (http://twilog.org/) を
-    用いて収集し、それを mixi の日記編集画面に挿入するための、
+    これは、twitter での1日分の発言を、twilog ( http://twilog.org/ )
+    を用いて収集し、それを mixi の日記編集画面に挿入するための、
     Greasemonkey スクリプトです。
 
     mixiユーザーで、ご自分の日記に「1日分の」twitterでのつぶやきを書き
@@ -19,7 +19,7 @@ service named "twilog", and to insert it in the mixi diary.
 
 
     (3) twitter のつぶやきを日ごとにまとめてくれる Web サービスである、
-        「ついろぐ (http://twilog.org/)」を利用していること、
+        「ついろぐ ( http://twilog.org/ )」を利用していること、
 
     を、前提としている Greasemonkey スクリプトです。
 
@@ -36,7 +36,7 @@ service named "twilog", and to insert it in the mixi diary.
     力されています。
 
     その状態で「ｔ」ボタンをクリックすると、指定したユーザの、指定した
-    日、１日分のつぶやきを「ついろぐ (http://twilog.org/)」から取得し、
+    日、１日分のつぶやきを「ついろぐ ( http://twilog.org/ )」から取得し、
     その内容を日記の編集画面に挿入します。
 
     ユーザー名に誤りがあったり、ついろぐを使用していなかったり、日付に
@@ -46,7 +46,7 @@ service named "twilog", and to insert it in the mixi diary.
 
 本スクリプトの詳細は、はてなダイアリーに記載する予定です。
 
-Tue Nov  3 19:16:29 JST 2009
+Tue Nov  3 19:54:09 JST 2009
 lolicsystem / Chiemimaru Kai
 
 http://d.hatena.ne.jp/lolicsystem
