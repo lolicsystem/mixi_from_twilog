@@ -40,8 +40,14 @@ service named "twilog", and to insert it in the mixi diary.
     日、１日分のつぶやきを「ついろぐ ( http://twilog.org/ )」から取得し、
     その内容を日記の編集画面に挿入します。
 
+    Twilog自体がつぶやきを記録するタイミングは不定で、最長12時間の間隔が
+    開きますが、本スクリプトは直前に投稿されたつぶやきも洩れなく反映する
+    仕様となっています（強制的に更新させています）。
+
     以下の場合には、ダイアログボックスを出して、情報表示します。
 
+        ・ Twilogの強制更新に失敗した場合
+        ・ なんらかの理由でTwilogと通信できなかった場合
         ・ 有効でない twitter ネームを指定した場合
         ・ 鍵付き（非公開）の twitter ネームを指定した場合
         ・ 指定した日のつぶやきが無かった場合
@@ -50,7 +56,7 @@ service named "twilog", and to insert it in the mixi diary.
 
 本スクリプトの詳細は、はてなダイアリーに記載する予定です。
 
-Mon Nov  9 17:10:29 JST 2009
+Mon Nov  9 19:16:34 JST 2009
 lolicsystem / Chiemimaru Kai
 
 http://d.hatena.ne.jp/lolicsystem

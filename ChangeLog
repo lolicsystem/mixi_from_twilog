@@ -1,5 +1,8 @@
 2009-11-09  Chiemimaru Kai  <lolicsystem@gmail.com>
 
+	* v0.8
+	- twilog のログを、強制的に更新するようにした。
+
 	* v0.7
 	- http://github.com/squirrels9 からのパッチ取り込み。各種alert表示。
 	- アイコン表示位置を選択可能にした。

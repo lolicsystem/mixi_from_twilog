@@ -4,7 +4,7 @@
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.7
+// @version       0.8
 // ==/UserScript==
 
 (function () {
@@ -160,23 +160,40 @@
     function getTwilog() {
         GM_xmlhttpRequest({
             method : "GET",
-            url    : twilogUrl(),
+            url    : twilogUpdateUrl(),
             onload : function(r) {
                 if (r.status == 200) {
-                    reformatTwilog(r.responseText);
+                    GM_xmlhttpRequest({
+                        method : "GET",
+                        url    : twilogUrl(),
+                        onload : function(r) {
+                            if (r.status == 200) {
+                                reformatTwilog(r.responseText);
+                            } else {
+                                alert('twilogとの通信エラーです');
+                            }
+                        }
+                    });
                 } else {
-                    alert('twilogとの通信エラーです');
+                    alert('twilogのログ更新に失敗しました');
                 }
             }
         });
     }
 
+    // Make twilog update URL
+    //
+    function twilogUpdateUrl() {
+        var url = "http://twilog.org/update.cgi?id=" + tn.value +
+                  "&order=&filter=&kind=reg";
+        return url;
+    }
+
     // Make twilog URL
     //
     function twilogUrl() {
-        var url;
-        url = "http://twilog.org/" + tn.value +
-              "/date-" + da.value + "/asc-nomen";
+        var url = "http://twilog.org/" + tn.value +
+                  "/date-" + da.value + "/asc-nomen";
         return url;
     }
 
