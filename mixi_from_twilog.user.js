@@ -4,7 +4,7 @@
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.6
+// @version       0.7
 // ==/UserScript==
 
 (function () {
@@ -36,28 +36,70 @@
         return null;
     }
 
+    // Factory to make 6 digits date string
+    //
+    function createDateString() {
+        var nt = new Date();
+        var now = nt.getTime();
+        return function (offset) {
+            var uYear, uMon, uDate;
+            nt.setTime(now + offset * 86400000);
+            uYear = ("00" + (nt.getYear()  - 100).toString()).slice(-2);
+            uMon  = ("00" + (nt.getMonth() +   1).toString()).slice(-2);
+            uDate = ("00" +  nt.getDate()        .toString()).slice(-2);
+            var uDate = uYear + uMon + uDate;
+            return uDate;
+        }
+    }
+    var dateString = createDateString();
+
+    // Icon position
+    //
+    var iconPos = GM_getValue("position", "0");
+    GM_setValue("position", iconPos);
+
+    // Insert/Overwrite mode
+    //
+    var overwriteMode = GM_getValue("overwrite", true);
+    GM_setValue("overwrite", overwriteMode);
+
     // Add twitter icon and input fields to the page
     //
-    var target = $X("//div[@class='txtEditArea']")[0];
-    var target2 = $X("id('emoji_palette')")[0];
-    var an = twitter_a();
-    var tn = tname_input();
-    var da = date_input();
+    var an = twitterAnchor();
+    var tn = tnameInput();
+    var da = dateInput();
 
-    target.insertBefore(an, target2);
-    target.insertBefore(tn, target2);
-    target.insertBefore(da, target2);
+    var target1 = $X("//div[@class='txtEditArea']")[0];
+    var target2 = $X("id('emoji_palette')")[0];
+    var target3 = $X("id('diaryBody')")[0];
+    switch (iconPos) {
+    case "1":
+        target1.insertBefore(an, target3);
+        target1.insertBefore(tn, target3);
+        target1.insertBefore(da, target3);
+        break;
+    case "2":
+        target1.appendChild(an);
+        target1.appendChild(tn);
+        target1.appendChild(da);
+        break;
+    default:
+        target1.insertBefore(an, target2);
+        target1.insertBefore(tn, target2);
+        target1.insertBefore(da, target2);
+        break;
+    }
 
     // Create anchor
     //
-    function twitter_a() {
+    function twitterAnchor() {
         var e = document.createElement('a');
         e.title = 'twilog挿入';
         e.href = 'javascript:void(0);';
-        e.appendChild(twitter_img());
+        e.appendChild(twitterImg());
         e.addEventListener('click',
                            function () {
-                               get_twilog();
+                               getTwilog();
                            },
                            false);
         return e;
@@ -65,7 +107,7 @@
 
     // Create twitter icon image
     //
-    function twitter_img() {
+    function twitterImg() {
         var e = document.createElement('img');
         var data = 'data:image/gif;base64,'+
             'R0lGODlhFgAWAMQAAHXV%2FNf0%2F%2FX09eb4%2F4ba%2Fdvb3GzS%2FMjIyajm'+
@@ -86,7 +128,7 @@
 
     // Create input field (twitter name)
     //
-    function tname_input() {
+    function tnameInput() {
         var e = document.createElement('input');
         e.type = 'text';
         e.size = '12';
@@ -100,7 +142,7 @@
 
     // Create input field (date)
     //
-    function date_input() {
+    function dateInput() {
         var e = document.createElement('input');
         e.type = 'text';
         e.size = '6';
@@ -108,67 +150,30 @@
                           'margin-left: 5px;' +
                           'display: table-cell;' +
                           'vertical-align: top;';
-        e.value = yesterday();
+        e.value = dateString(-1);       // yesterday
         return e;
-    }
-
-    // Make 6 digits date string
-    //
-    function date_string(offset) {
-        var uYear, uMon, uDate;
-        var nt = new Date();
-        nt.setTime(nt.getTime() + offset);
-
-        uYear = ("00" + (nt.getYear() - 100).toString()).slice(-2);
-        uMon  = ("00" + (nt.getMonth() + 1).toString()).slice(-2);
-        uDate = ("00" + nt.getDate() .toString()).slice(-2);
-        var uDate = uYear + uMon + uDate;
-        return uDate;
-    }
-
-    // Make yesterday string
-    //
-    function yesterday() {
-        return date_string(-86400000);
-        }
-
-    // Make today string
-    //
-    function today() {
-        return date_string(0);
     }
 
     // Get twitter log from twilog.
     // (Event-listener for "t" button)
     //
-    function get_twilog() {
-        var twilog_text;
+    function getTwilog() {
         GM_xmlhttpRequest({
             method : "GET",
-            url    : twilog_url(),
+            url    : twilogUrl(),
             onload : function(r) {
-                twilog_text = {title:'', text:''};
-                switch (r.status) {
-                case 200:
-                    twilog_text = reformat_twilog(r.responseText);
-                    GM_setValue("twitter_name", tn.value);
-                    break;
-
-                case 404:
-                    alert('twitterユーザー名か、もしくは日付の指定が間違っていませんか?');
-                default:
-                    twilog_text = {title:'', text:''};
-                    break;
+                if (r.status == 200) {
+                    reformatTwilog(r.responseText);
+                } else {
+                    alert('twilogとの通信エラーです');
                 }
-                insert_twilog(twilog_text);
             }
         });
-        return ;
     }
 
     // Make twilog URL
     //
-    function twilog_url() {
+    function twilogUrl() {
         var url;
         url = "http://twilog.org/" + tn.value +
               "/date-" + da.value + "/asc-nomen";
@@ -177,66 +182,60 @@
 
     // reformat twilog source
     //
-    function reformat_twilog(source) {
-        var text = '';
-        var ti = '';
+    function reformatTwilog(source) {
         var LF = String.fromCharCode(10);
         var d = document.createElement('div');
         d.innerHTML = source;
 
-        var ti_src = $X(".//h3[@class='bar-main2']", d);
-
-        if (0 < ti_src.length)
-        {
-             ti = ti_src[0]
-                 .innerHTML.split(LF)[0]
-                 .replace(/ */gi, '') + ' のつぶやき';
+        var tiSrc = $X(".//h3[@class='bar-main2']", d);
+        if (0 < tiSrc.length) {
+            var title = tiSrc[0]
+                        .innerHTML.split(LF)[0]
+                        .replace(/ */gi, '') + ' のつぶやき';
             var t = $X(".//p[@class='tl-text']", d);
             var p = $X(".//p[@class='tl-posted']/a", d);
+            var contents = '';
             for (var i = 0; i < t.length; i++) {
-                text = text +
+                contents = contents +
                        p[i].innerHTML + '\n' +
                        t[i].innerHTML.replace(/<\/?[^>]+>/gi, '') + '\n\n';
             }
-
-            text = text +
-                '--------\n' +
-                '※ Powered by "mixi_from_twilog.user.js" !!\n' +
-                '　 (http://github.com/lolicsystem/mixi_from_twilog)';
+            contents = contents +
+                       '--------\n' +
+                       '※ Powered by "mixi_from_twilog.user.js" !!\n' +
+                       '　 (http://github.com/lolicsystem/mixi_from_twilog)';
+            insertTwilog(title, contents);
+            GM_setValue("twitter_name", tn.value);
+        } else {
+            if ($X(".//title", d)[0].textContent == "") {
+                alert($X("id('main')/div", d)[0].textContent);
+            } else {
+                var msg = '';
+                var td = dateString(0);
+                if (td < da.value)
+                    msg = '未来からはつぶやきを取得できません。';
+                else if (da.value == td)
+                    msg = '今日はまだつぶやいていないみたい。';
+                else
+                    msg = $X("id('pankuzu')/strong", d)[0].textContent +
+                          ' のつぶやきは、twilog 上にないみたい。';
+                alert(msg);
+            }
         }
-        else
-        {
-            var msg = '';
-            var td = today();
-            if (td < da.value)
-            {
-                msg = '未来からはつぶやきを取得できません。';
-            }
-            else if (da.value == td)
-            {
-                msg = '今日はまだつぶやいていないみたい。';
-            }
-            else
-            {
-                msg = $X(".//div[@id='pankuzu']/strong", d)[0].innerHTML +
-                      ' はつぶやかなかったみたい。';
-            }
-
-            alert(msg);
-        }
-
-        return {title:ti, text:text};
     }
 
     // Insert log into textarea.
     //
-    function insert_twilog(text) {
+    function insertTwilog(title, contents) {
         var ti = $X("//input[@class='editareaWidth']")[0];
         var ta = $X("id('diaryBody')")[0];
-//        ti.value = ti.value + text.title;     // Insert mode
-//        ta.value = ta.value + text.text;      //
-        ti.value = text.title;                  // overwrite mode
-        ta.value = text.text;                   //
+        if (overwriteMode) {
+            ti.value = title;
+            ta.value = contents;
+        } else {
+            ti.value = ti.value + title;
+            ta.value = ta.value + contents;
+        }
     }
 
 })();

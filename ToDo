@@ -1,3 +1,13 @@
+2009-11-09  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* Twilogに登録していないユーザでも使用可能に
+
+	* 有効でないtwitterユーザ名が指定された場合や、鍵付きへの対処
+	(20091109完了)
+	- twilog は その場合でも 200 を返すが、title タグが空。
+	- それを検知して、あとは、twilog のページからから警告メッセージそ
+	  のものをいただいて、alert表示。
+
 2009-11-03  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* twitter_nameの対話的取得 (20091103完了)

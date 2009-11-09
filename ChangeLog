@@ -1,3 +1,10 @@
+2009-11-09  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* v0.7
+	- http://github.com/squirrels9 からのパッチ取り込み。各種alert表示。
+	- アイコン表示位置を選択可能にした。
+	- 「上書き」か、「追加」かを選択可能にした。
+
 2009-11-03  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* v0.6
@@ -9,7 +16,7 @@
 
 	* test_091103 (branch)
 	- twitter_name と 日付用の input フィールドを試すためのブランチ
-	
+
 	* v0.4.1
 	- twitter_name が lolicsystem のままだったのを修正。
 	- Config::Pit のように、スクリプトと ID/PW を分ける標準的な仕組みっ
