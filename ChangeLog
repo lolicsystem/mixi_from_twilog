@@ -1,5 +1,8 @@
 2009-11-09  Chiemimaru Kai  <lolicsystem@gmail.com>
 
+	* v0.9
+	- twilog に登録していないユーザーのつぶやきも取得できるようになった。
+
 	* v0.8
 	- twilog のログを、強制的に更新するようにした。
 

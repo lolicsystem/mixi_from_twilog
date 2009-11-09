@@ -10,6 +10,9 @@ service named "twilog", and to insert it in the mixi diary.
     mixiユーザーで、ご自分の日記に「1日分の」twitterでのつぶやきを書き
     込みたいときなどに便利です。
 
+    twitter のユーザーであれば、twilog へのユーザー登録をしていなくても、
+    本スクリプトを利用可能です（但し、若干の制限があります）。
+
 
 【使用にあたっての前提条件】
     (1) Greasemonkey スクリプトを扱える Firefox もしくはそれに類するブ
@@ -17,12 +20,13 @@ service named "twilog", and to insert it in the mixi diary.
 
     (2) twitter でのつぶやきを公開している（「鍵」をかけていない）こと、
 
-
-    (3) twitter のつぶやきを日ごとにまとめてくれる Web サービスである、
-        「ついろぐ ( http://twilog.org/ )」を利用していること、
-        ※ この制限(3)は、後のバージョンアップで無くなる予定です。
-
     を、前提としている Greasemonkey スクリプトです。
+    特に twilog へのユーザー登録を行っておく必要はありませんが、未登録ユー
+    ザーの場合、捕捉されるつぶやきが最新のものから200件に限定されますの
+    で、たくさんつぶやかれる方は、過去数日分のつぶやきしか本スクリプトで
+    は取り込めないことになります。
+
+    ぜひ、twilog への登録をオススメします（すごく便利ですし…）。
 
 
 【インストールすると】
@@ -51,6 +55,25 @@ service named "twilog", and to insert it in the mixi diary.
         ・ 有効でない twitter ネームを指定した場合
         ・ 鍵付き（非公開）の twitter ネームを指定した場合
         ・ 指定した日のつぶやきが無かった場合
+
+
+【カスタマイズ】
+    Firefox の about:config 画面から、本スクリプトのカスタマイズが可能で
+    す。ただし、about:config について詳しくない方は操作しない方が無難で
+    す。
+
+    ●「ｔ」ボタン表示位置の変更
+    設定名：greasemonkey.scriptvals.http://github.com/lolicsystem/mixi from twilog.position
+    値    ：0...デフォルトです。日記編集画面の下にボタンを表示します。
+            1...他の編集ボタンのすぐ右横に「ｔ」ボタンを表示します。
+                mixiプレミアム未加入の方にお奨めです。
+            2...他の編集ボタンの1行下に、「ｔ」ボタンを表示します。
+                あまり見栄えがよくありません。
+
+    ●日記に「上書き」するか「追加」するか
+    設定名：greasemonkey.scriptvals.http://github.com/lolicsystem/mixi from twilog.overwrite
+    値    ：true ...現在編集中の日記に、つぶやきを上書きします。
+            false...現在編集中の日記に、つぶやきを追加します。
 
 
 

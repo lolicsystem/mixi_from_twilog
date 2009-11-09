@@ -4,7 +4,7 @@
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.8
+// @version       0.9
 // ==/UserScript==
 
 (function () {
@@ -74,19 +74,19 @@
     var target3 = $X("id('diaryBody')")[0];
     switch (iconPos) {
     case "1":
+        target1.insertBefore(an, target2);
+        target1.insertBefore(tn, target2);
+        target1.insertBefore(da, target2);
+        break;
+    case "2":
         target1.insertBefore(an, target3);
         target1.insertBefore(tn, target3);
         target1.insertBefore(da, target3);
         break;
-    case "2":
+    default:
         target1.appendChild(an);
         target1.appendChild(tn);
         target1.appendChild(da);
-        break;
-    default:
-        target1.insertBefore(an, target2);
-        target1.insertBefore(tn, target2);
-        target1.insertBefore(da, target2);
         break;
     }
 
@@ -154,33 +154,13 @@
         return e;
     }
 
-    // Get twitter log from twilog.
-    // (Event-listener for "t" button)
+    // Make twilog URL
     //
-    function getTwilog() {
-        GM_xmlhttpRequest({
-            method : "GET",
-            url    : twilogUpdateUrl(),
-            onload : function(r) {
-                if (r.status == 200) {
-                    GM_xmlhttpRequest({
-                        method : "GET",
-                        url    : twilogUrl(),
-                        onload : function(r) {
-                            if (r.status == 200) {
-                                reformatTwilog(r.responseText);
-                            } else {
-                                alert('twilogとの通信エラーです');
-                            }
-                        }
-                    });
-                } else {
-                    alert('twilogのログ更新に失敗しました');
-                }
-            }
-        });
+    function twilogUrl() {
+        var url = "http://twilog.org/" + tn.value +
+                  "/date-" + da.value + "/asc-nomen";
+        return url;
     }
-
     // Make twilog update URL
     //
     function twilogUpdateUrl() {
@@ -189,12 +169,64 @@
         return url;
     }
 
-    // Make twilog URL
+    // Make twilog update URL (noreg user)
     //
-    function twilogUrl() {
-        var url = "http://twilog.org/" + tn.value +
-                  "/date-" + da.value + "/asc-nomen";
+    function twilogUpdateNoregUrl() {
+        var url = "http://twilog.org/update.cgi?id=" + tn.value +
+                  "&order=asc&filter=nomen&kind=noreg";
         return url;
+    }
+
+    // Get twitter log from twilog.
+    // (Event-listener for "t" button)
+    //
+    function getTwilog() {
+        GM_xmlhttpRequest({
+            method : "GET",
+            url    : twilogUrl(),
+            onload : function(r) {
+                if (r.status == 200) {
+                    tryToUpadteTwilog(r.responseText)
+                } else {
+                    alert('twilogとの通信エラーです');
+                }
+            }
+        });
+    }
+
+    function tryToUpadteTwilog(source) {
+        var d = document.createElement('div');
+        d.innerHTML = source;
+        if ($X(".//title", d)[0].textContent == "") {
+            alert($X("id('main')/div", d)[0].textContent);
+        } else {
+            var s = $X("id('order')/following-sibling::node()/span", d);
+            if (s != "" && s[0].textContent == "このユーザーはTwilogに登録されていません") {
+                GM_xmlhttpRequest({
+                    method : "GET",
+                    url    : twilogUpdateNoregUrl(),
+                    onload : function(r) {
+                        if (r.status == 200) {
+                            reformatNoregTwilog(source);
+                        } else {
+                            alert('twilogのログ更新に失敗しました');
+                        }
+                    }
+                });
+            } else {
+                GM_xmlhttpRequest({
+                    method : "GET",
+                    url    : twilogUpdateUrl(),
+                    onload : function(r) {
+                        if (r.status == 200) {
+                            reformatTwilog(source);
+                        } else {
+                            alert('twilogのログ更新に失敗しました');
+                        }
+                    }
+                });
+            }
+        }
     }
 
     // reformat twilog source
@@ -211,6 +243,50 @@
                         .replace(/ */gi, '') + ' のつぶやき';
             var t = $X(".//p[@class='tl-text']", d);
             var p = $X(".//p[@class='tl-posted']/a", d);
+            var contents = '';
+            for (var i = 0; i < t.length; i++) {
+                contents = contents +
+                       p[i].innerHTML + '\n' +
+                       t[i].innerHTML.replace(/<\/?[^>]+>/gi, '') + '\n\n';
+            }
+            contents = contents +
+                       '--------\n' +
+                       '※ Powered by "mixi_from_twilog.user.js" !!\n' +
+                       '　 (http://github.com/lolicsystem/mixi_from_twilog)';
+            insertTwilog(title, contents);
+            GM_setValue("twitter_name", tn.value);
+        } else {
+            if ($X(".//title", d)[0].textContent == "") {
+                alert($X("id('main')/div", d)[0].textContent);
+            } else {
+                var msg = '';
+                var td = dateString(0);
+                if (td < da.value)
+                    msg = '未来からはつぶやきを取得できません。';
+                else if (da.value == td)
+                    msg = '今日はまだつぶやいていないみたい。';
+                else
+                    msg = $X("id('pankuzu')/strong", d)[0].textContent +
+                          ' のつぶやきは、twilog 上にないみたい。';
+                alert(msg);
+            }
+        }
+    }
+
+    // reformat twilog source (noreg user)
+    //
+    function reformatNoregTwilog(source) {
+        var LF = String.fromCharCode(10);
+        var d = document.createElement('div');
+        d.innerHTML = source;
+
+        var tiSrc = $X(".//a[@name='" + da.value + "']/following-sibling::node()//h3[@class='bar-main2']", d);
+        if (0 < tiSrc.length) {
+            var title = tiSrc[0]
+                        .innerHTML.split(LF)[0]
+                        .replace(/ */gi, '') + ' のつぶやき';
+            var t = $X("id('d" + da.value + "')//p[@class='tl-text']", d);
+            var p = $X("id('d" + da.value + "')//p[@class='tl-posted']/a", d);
             var contents = '';
             for (var i = 0; i < t.length; i++) {
                 contents = contents +
