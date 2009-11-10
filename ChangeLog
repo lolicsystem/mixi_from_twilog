@@ -1,3 +1,8 @@
+2009-11-11  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* v0.9.1
+	- ソースの整理と名前欄等が空欄の場合の処理追加
+
 2009-11-09  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* v0.9

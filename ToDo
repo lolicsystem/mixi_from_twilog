@@ -1,3 +1,12 @@
+2009-11-11  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* 整形処理の内容をカスタマイズ可能に
+	- 関数自体を about:config 中に記録する。
+
+2009-11-10  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* @やRT付き投稿の扱いを選択可能に
+
 2009-11-09  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* Twilogに登録していないユーザでも使用可能に (20091109完了)

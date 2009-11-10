@@ -4,7 +4,7 @@
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.9
+// @version       0.9.1
 // ==/UserScript==
 
 (function () {
@@ -181,101 +181,55 @@
     // (Event-listener for "t" button)
     //
     function getTwilog() {
-        GM_xmlhttpRequest({
-            method : "GET",
-            url    : twilogUrl(),
-            onload : function(r) {
-                if (r.status == 200) {
-                    tryToUpadteTwilog(r.responseText)
-                } else {
-                    alert('twilogとの通信エラーです');
+        if (tn.value == "")
+            alert("twitterユーザー名が入力されていません");
+        else if (da.value == "")
+            alert("日付が入力されていません");
+        else
+            GM_xmlhttpRequest({
+                method : "GET",
+                url    : twilogUrl(),
+                onload : function(r) {
+                    if (r.status == 200)
+                        tryToUpadteTwilog(r.responseText)
+                    else
+                        alert(
+                              'twilogとの通信エラーです\n' +
+                              'twitterユーザー名と日付が正しいか' +
+                              '確認して下さい\n'
+                              );
                 }
-            }
-        });
+            });
     }
 
     function tryToUpadteTwilog(source) {
         var d = document.createElement('div');
         d.innerHTML = source;
-        if ($X(".//title", d)[0].textContent == "") {
+        if ($X(".//title", d)[0].textContent == "")
             alert($X("id('main')/div", d)[0].textContent);
-        } else {
+        else {
             var s = $X("id('order')/following-sibling::node()/span", d);
-            if (s != "" && s[0].textContent == "このユーザーはTwilogに登録されていません") {
-                GM_xmlhttpRequest({
-                    method : "GET",
-                    url    : twilogUpdateNoregUrl(),
-                    onload : function(r) {
-                        if (r.status == 200) {
-                            reformatNoregTwilog(source);
-                        } else {
-                            alert('twilogのログ更新に失敗しました');
-                        }
-                    }
-                });
-            } else {
-                GM_xmlhttpRequest({
-                    method : "GET",
-                    url    : twilogUpdateUrl(),
-                    onload : function(r) {
-                        if (r.status == 200) {
-                            reformatTwilog(source);
-                        } else {
-                            alert('twilogのログ更新に失敗しました');
-                        }
-                    }
-                });
-            }
+            var updateUrl;
+            if (s != "" && s[0].textContent == "このユーザーはTwilogに登録されていません")
+                updateUrl = twilogUpdateNoregUrl();
+            else
+                updateUrl = twilogUpdateUrl();
+            GM_xmlhttpRequest({
+                method : "GET",
+                url    : updateUrl,
+                onload : function(r) {
+                    if (r.status == 200)
+                        reformatTwilog(source);
+                    else
+                        alert('twilogのログ更新に失敗しました');
+                }
+            });
         }
     }
 
     // reformat twilog source
     //
     function reformatTwilog(source) {
-        var LF = String.fromCharCode(10);
-        var d = document.createElement('div');
-        d.innerHTML = source;
-
-        var tiSrc = $X(".//h3[@class='bar-main2']", d);
-        if (0 < tiSrc.length) {
-            var title = tiSrc[0]
-                        .innerHTML.split(LF)[0]
-                        .replace(/ */gi, '') + ' のつぶやき';
-            var t = $X(".//p[@class='tl-text']", d);
-            var p = $X(".//p[@class='tl-posted']/a", d);
-            var contents = '';
-            for (var i = 0; i < t.length; i++) {
-                contents = contents +
-                       p[i].innerHTML + '\n' +
-                       t[i].innerHTML.replace(/<\/?[^>]+>/gi, '') + '\n\n';
-            }
-            contents = contents +
-                       '--------\n' +
-                       '※ Powered by "mixi_from_twilog.user.js" !!\n' +
-                       '　 (http://github.com/lolicsystem/mixi_from_twilog)';
-            insertTwilog(title, contents);
-            GM_setValue("twitter_name", tn.value);
-        } else {
-            if ($X(".//title", d)[0].textContent == "") {
-                alert($X("id('main')/div", d)[0].textContent);
-            } else {
-                var msg = '';
-                var td = dateString(0);
-                if (td < da.value)
-                    msg = '未来からはつぶやきを取得できません。';
-                else if (da.value == td)
-                    msg = '今日はまだつぶやいていないみたい。';
-                else
-                    msg = $X("id('pankuzu')/strong", d)[0].textContent +
-                          ' のつぶやきは、twilog 上にないみたい。';
-                alert(msg);
-            }
-        }
-    }
-
-    // reformat twilog source (noreg user)
-    //
-    function reformatNoregTwilog(source) {
         var LF = String.fromCharCode(10);
         var d = document.createElement('div');
         d.innerHTML = source;
@@ -300,9 +254,9 @@
             insertTwilog(title, contents);
             GM_setValue("twitter_name", tn.value);
         } else {
-            if ($X(".//title", d)[0].textContent == "") {
+            if ($X(".//title", d)[0].textContent == "")
                 alert($X("id('main')/div", d)[0].textContent);
-            } else {
+            else {
                 var msg = '';
                 var td = dateString(0);
                 if (td < da.value)
