@@ -75,11 +75,15 @@ service named "twilog", and to insert it in the mixi diary.
     値    ：true ...現在編集中の日記に、つぶやきを上書きします。
             false...現在編集中の日記に、つぶやきを追加します。
 
+    ●1日分のつぶやきの整形方法
+    設定名：greasemonkey.scriptvals.http://github.com/lolicsystem/mixi from twilog.template
+    値    ：整形に使われる関数そのものです。
+            (T.B.D)
 
 
 本スクリプトの詳細は、はてなダイアリーに記載する予定です。
 
-Mon Nov  9 19:16:34 JST 2009
+Thu Nov 12 02:44:46 JST 2009
 lolicsystem / Chiemimaru Kai
 
 http://d.hatena.ne.jp/lolicsystem

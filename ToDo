@@ -1,6 +1,6 @@
 2009-11-11  Chiemimaru Kai  <lolicsystem@gmail.com>
 
-	* 整形処理の内容をカスタマイズ可能に
+	* 整形処理の内容をカスタマイズ可能に (20091112完了)
 	- 関数自体を about:config 中に記録する。
 
 2009-11-10  Chiemimaru Kai  <lolicsystem@gmail.com>

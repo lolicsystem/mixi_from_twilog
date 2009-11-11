@@ -4,7 +4,7 @@
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.9.1
+// @version       0.10
 // ==/UserScript==
 
 (function () {
@@ -218,42 +218,41 @@
                 method : "GET",
                 url    : updateUrl,
                 onload : function(r) {
-                    if (r.status == 200)
-                        reformatTwilog(source);
-                    else
+                    if (r.status == 200) {
+                        insertToTextarea(scraping(source));
+                    } else
                         alert('twilogのログ更新に失敗しました');
                 }
             });
         }
     }
 
-    // reformat twilog source
+    // scraping twilog
     //
-    function reformatTwilog(source) {
+    function scraping(source) {
         var LF = String.fromCharCode(10);
         var d = document.createElement('div');
         d.innerHTML = source;
 
         var tiSrc = $X(".//a[@name='" + da.value + "']/following-sibling::node()//h3[@class='bar-main2']", d);
-        if (0 < tiSrc.length) {
-            var title = tiSrc[0]
-                        .innerHTML.split(LF)[0]
-                        .replace(/ */gi, '') + ' のつぶやき';
-            var t = $X("id('d" + da.value + "')//p[@class='tl-text']", d);
-            var p = $X("id('d" + da.value + "')//p[@class='tl-posted']/a", d);
-            var contents = '';
+        if (tiSrc.length > 0) {
+            var date = tiSrc[0].innerHTML.split(LF)[0].replace(/ */gi, '');
+            var o = {date:date, tweets:[]};
+            var t = $X("id('d" + da.value + "')/div[@class='tl-tweet']", d);
             for (var i = 0; i < t.length; i++) {
-                contents = contents +
-                       p[i].innerHTML + '\n' +
-                       t[i].innerHTML.replace(/<\/?[^>]+>/gi, '') + '\n\n';
+                var text   = $X("./p[@class='tl-text']", t[i])[0]
+                             .textContent.replace(/<\/?[^>]+>/gi, '');
+                var posted = $X("./p[@class='tl-posted']/a", t[i])[0];
+                var tweet  = {
+                    time: posted.text,
+                    href: posted.href,
+                    text: text
+                };
+                o.tweets[i] = tweet;
             }
-            contents = contents +
-                       '--------\n' +
-                       '※ Powered by "mixi_from_twilog.user.js" !!\n' +
-                       '　 (http://github.com/lolicsystem/mixi_from_twilog)';
-            insertTwilog(title, contents);
             GM_setValue("twitter_name", tn.value);
-        } else {
+            return o;
+        } else
             if ($X(".//title", d)[0].textContent == "")
                 alert($X("id('main')/div", d)[0].textContent);
             else {
@@ -268,12 +267,13 @@
                           ' のつぶやきは、twilog 上にないみたい。';
                 alert(msg);
             }
-        }
     }
 
     // Insert log into textarea.
     //
-    function insertTwilog(title, contents) {
+    function insertToTextarea(o) {
+        var title = o.date + ' のつぶやき';
+        var contents = rendering(o.tweets) + footer();
         var ti = $X("//input[@class='editareaWidth']")[0];
         var ta = $X("id('diaryBody')")[0];
         if (overwriteMode) {
@@ -283,6 +283,31 @@
             ti.value = ti.value + title;
             ta.value = ta.value + contents;
         }
+    }
+
+    function footer() {
+        return '--------\n' +
+               '※ Powered by "mixi_from_twilog.user.js" !!\n' +
+               '　 (http://github.com/lolicsystem/mixi_from_twilog)';
+    }
+
+    function rendering(t) {
+        var r = '';
+        var aTweet = makeTemplate();
+        for (var i = 0; i < t.length; i++)
+            r = r + aTweet(t[i]);
+        return r;
+    }
+
+    function makeTemplate() {
+        var tmpl = GM_getValue("template", "");
+        var f;
+        if (tmpl == "") {
+            f = function (t) { return t.time + '\n' + t.text + '\n\n'; };
+            GM_setValue("template", uneval(f));
+        } else
+            f = eval(tmpl);
+        return f;
     }
 
 })();

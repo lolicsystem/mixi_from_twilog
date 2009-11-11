@@ -1,3 +1,9 @@
+2009-11-12  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* v0.10
+	- スクレイピングと表示を分離した。
+	- 表示テンプレート関数をabout:configから読み込み、修正可能にした。
+
 2009-11-11  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* v0.9.1
