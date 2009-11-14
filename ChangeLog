@@ -1,3 +1,10 @@
+2009-11-15  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* v0.12
+	- ユーザーコンフィグ画面を実装。
+	- アイコン位置指定を廃止。
+	- 整形関数そのものをユーザに触らせるのを廃止し、テンプレートを触らせるようにした。
+
 2009-11-14  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* v0.11

@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name          mixi from twilog
+// @name          mixi_from_twilog
 // @namespace     http://github.com/lolicsystem
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl*
 // @include       http://mixi.jp/edit_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.11
+// @version       0.12
 // ==/UserScript==
 
 (function () {
@@ -54,11 +54,6 @@
     }
     var dateString = createDateString();
 
-    // Icon position
-    //
-    var iconPos = GM_getValue("position", "0");
-    GM_setValue("position", iconPos);
-
     // Insert/Overwrite mode
     //
     var overwriteMode = GM_getValue("overwrite", true);
@@ -68,6 +63,11 @@
     //
     var mention = GM_getValue("mention", "2");
     GM_setValue("mention", mention);
+
+    // tweet template
+    //
+    var tmpl = GM_getValue("template", '%time%\n%tweet%\n\n');
+    GM_setValue("template", tmpl);
 
     // premium user?
     //
@@ -79,39 +79,30 @@
     var tn = tnameInput();
     var da = dateInput();
 
-    var target1 = $X("//div[@class='txtEditArea']")[0];
-    var target2 = $X("id('emoji_palette')")[0];
-    var target3 = $X("id('diaryBody')")[0];
-    switch (iconPos) {
-    case "1":
-        target1.insertBefore(an, target2);
-        target1.insertBefore(tn, target2);
-        target1.insertBefore(da, target2);
-        break;
-    case "2":
-        target1.insertBefore(an, target3);
-        target1.insertBefore(tn, target3);
-        target1.insertBefore(da, target3);
-        break;
-    default:
-        target1.appendChild(an);
-        target1.appendChild(tn);
-        target1.appendChild(da);
-        break;
-    }
+    var target = $X("//div[@class='txtEditArea']")[0];
+    target.appendChild(an);
+    target.appendChild(tn);
+    target.appendChild(da);
 
     // Create anchor
     //
+    var tid;
     function twitterAnchor() {
         var e = document.createElement('a');
         e.title = 'twilog挿入';
         e.href = 'javascript:void(0);';
         e.appendChild(twitterImg());
-        e.addEventListener('click',
+        e.addEventListener('click', getTwilog, false);
+        e.addEventListener('mouseover',
                            function () {
-                               getTwilog();
-                           },
-                           false);
+                               tid = setTimeout(function () {
+                                   appendConfigBox();
+                               }, 3000);
+                           }, true);
+        e.addEventListener('mouseout',
+                           function () {
+                               clearTimeout(tid);
+                           }, true);
         return e;
     }
 
@@ -164,6 +155,84 @@
         return e;
     }
 
+    // ConfigBox
+    //
+    function configBox() {
+        var e = document.createElement('div');
+        e.id = 'config';
+        e.innerHTML =
+            '<form action="" method="post">' +
+            '<strong>つぶやきを現在の日記に…</strong><br />' +
+            '<div style="margin-left: 20px;">' +
+            '<input id="overwritetrue"  type="radio" name="overwrite"> 上書きする<br />' +
+            '<input id="overwritefalse" type="radio" name="overwrite"> 追記する<br />' +
+            '</div>' +
+            '<strong>返信やReTweetを含むつぶやきの表示は…</strong><br />' +
+            '<div style="margin-left: 20px;">' +
+            '<input id="mention0" type="radio" name="mention"> 返信もRTも表示<br />' +
+            '<input id="mention1" type="radio" name="mention"> 返信は非表示、RTは表示<br />' +
+            '<input id="mention2" type="radio" name="mention"> 返信もRTも非表示<br />' +
+            '</div>' +
+            '<strong>つぶやきの整形テンプレート</strong><br />' +
+            '<textarea id="template" style="height:100px;"></textarea><br />' +
+            '<a id="configsubmit" class="formBt01">確定</a> ' +
+            '<a id="configcancel" class="formBt01">取り消し</a>' +
+            '</form>';
+        return e;
+    }
+
+    function appendConfigBox() {
+        var co = configBox();
+        if (overwriteMode) {
+            $X("id('overwritetrue')", co)[0].checked = 'checked';
+        } else {
+            $X("id('overwritefalse')", co)[0].checked = 'checked';
+        }
+        switch (mention) {
+        case "0":
+            $X("id('mention0')", co)[0].checked = 'checked';
+            break;
+        case "1":
+            $X("id('mention1')", co)[0].checked = 'checked';
+            break;
+        case "2":
+            $X("id('mention2')", co)[0].checked = 'checked';
+            break;
+        }
+        $X("id('template')", co)[0].value = tmpl;
+        $X("id('configsubmit')", co)[0].addEventListener('click', function(){return configSubmit(true);},true);
+        $X("id('configcancel')", co)[0].addEventListener('click', function(){return configSubmit(false);},true);
+        target.appendChild(co);
+    }
+
+    function removeConfigBox() {
+        var p = $X("id('config')")[0];
+        target.removeChild(p);
+    }
+
+    function configSubmit(submit) {
+        var co = $X("id('config')")[0];
+        if (submit) {
+            if ($X("id('overwritetrue')", co)[0].checked)
+                overwriteMode = true;
+            else
+                overwriteMode = false;
+            GM_setValue("overwrite", overwriteMode);
+
+            if ($X("id('mention0')", co)[0].checked)
+                mention = "0";
+            else if ($X("id('mention1')", co)[0].checked)
+                mention = "1";
+            else
+                mention = "2";
+            GM_setValue("mention", mention);
+
+            tmpl = $X("id('template')", co)[0].value;
+            GM_setValue("template", tmpl);
+        }
+        removeConfigBox();
+    }
+
     // Make twilog URL
     //
     function twilogUrl() {
@@ -209,7 +278,8 @@
                         alert(
                               'twilogとの通信エラーです\n' +
                               'twitterユーザー名と日付が正しいか' +
-                              '確認して下さい\n'
+                              '確認して下さい\n' +
+                              'まれに、http://twilog.org/ そのものが落ちている可能性もあります'
                               );
                 }
             });
@@ -253,7 +323,7 @@
             var o = {date:date, tweets:[]};
             var t = $X("id('d" + da.value + "')/div[@class='tl-tweet']", d);
             for (var i = 0; i < t.length; i++) {
-		var text = $X("./p[@class='tl-text']", t[i])[0];
+                var text = $X("./p[@class='tl-text']", t[i])[0];
                 var text = isPremium ? text.innerHTML : text.textContent;
                 var posted = $X("./p[@class='tl-posted']/a", t[i])[0];
                 var tweet  = {
@@ -306,21 +376,11 @@
 
     function rendering(t) {
         var r = '';
-        var aTweet = makeTemplate();
         for (var i = 0; i < t.length; i++)
-            r = r + aTweet(t[i]);
+            r = r + tmpl.replace(/%tweet%/gi, t[i].text)
+                        .replace(/%time%/gi,  t[i].time)
+                        .replace(/%href%/gi,  t[i].href);
         return r;
-    }
-
-    function makeTemplate() {
-        var tmpl = GM_getValue("template", "");
-        var f;
-        if (tmpl == "") {
-            f = function (t) { return t.time + '\n' + t.text + '\n\n'; };
-            GM_setValue("template", uneval(f));
-        } else
-            f = eval(tmpl);
-        return f;
     }
 
 })();

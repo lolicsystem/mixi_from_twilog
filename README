@@ -58,43 +58,56 @@ service named "twilog", and to insert it in the mixi diary.
 
 
 【カスタマイズ】
-    Firefox の about:config 画面から、本スクリプトのカスタマイズが可能で
-    す。ただし、about:config について詳しくない方は操作しない方が無難で
-    す。
+    「ｔ」ボタンの上にマウスカーソルを３秒間置くと（その間、クリックはし
+    ないで下さい）、本スクリプトの設定画面が現れます。
 
-    ●「ｔ」ボタン表示位置の変更
-    設定名：greasemonkey.scriptvals.http://github.com/lolicsystem/mixi from twilog.position
-    値    ：0...デフォルトです。日記編集画面の下にボタンを表示します。
-            1...他の編集ボタンのすぐ右横に「ｔ」ボタンを表示します。
-                mixiプレミアム未加入の方にお奨めです。
-            2...他の編集ボタンの1行下に、「ｔ」ボタンを表示します。
-                あまり見栄えがよくありません。
+    ●つぶやきを現在の日記に…
+        ・ 上書きする (デフォルト)
+        ・ 追記する
+      を選択して下さい。
 
-    ●日記に「上書き」するか「追加」するか
-    設定名：greasemonkey.scriptvals.http://github.com/lolicsystem/mixi from twilog.overwrite
-    値    ：true ...現在編集中の日記に、つぶやきを上書きします。
-            false...現在編集中の日記に、つぶやきを追加します。
+    ●返信やReTweetを含むつぶやきの表示は…
+        ・ 返信(先頭が@のつぶやき)もRT(文中に@がある記事)も表示
+        ・ 返信は非表示、RTは表示
+        ・ 返信もRTも非表示 (デフォルト)
+      を選択して下さい。
 
-    ●ReplyおよびMentionの扱い
-    設定名：greasemonkey.scriptvals.http://github.com/lolicsystem/mixi from twilog.mention
-    値    ：0...Reply(先頭が@のつぶやき)もMention(文中に@がある記事)も
-                取り込みます。
-            1...Replyは取り込みませんが、Mentionは取り込みます。
-            2...デフォルトです。ReplyもMentionも取り込みません。
+      また、返信やRTの @username ですが、mixiプレミアムに加入している場
+      合は、@username のtwitterホームページへのリンクとして表示されます。
+      mixiプレミアムに非加入の場合は、単なるテキスト表示となります。
 
-    ※ @username は、mixiプレミアムに加入している場合、username の
-       twitterホームページへのリンクとなります。非プレミアムの場合は、単
-       なるテキスト表示となります。
+    ●つぶやきの整形テンプレート
+        ここには、つぶやきひとつひとつを、mixi日記上でどう表示するかを指
+        定して下さい。テンプレート中には、以下の予約語が使用可能です。
 
-    ●1日分のつぶやきの整形方法
-    設定名：greasemonkey.scriptvals.http://github.com/lolicsystem/mixi from twilog.template
-    値    ：整形に使われる関数そのものです。
-            (T.B.D)
+        %tweet% … つぶやき本文に置き換わります。
+        %time%  … つぶやいた時刻に置き換わります
+        %href%  … twitter上でのつぶやきそのものへのリンクURLに置き換わ
+                   ります。
 
+        テンプレートのデフォルトは、以下の様になっています。
+
+-----ここから
+%time%
+%tweet%
+
+-----ここまで
+
+        時刻とつぶやきの内容を表示するだけのシンプルなものです。mixiプレ
+        ミアムに加入されている場合は、様々なHTMLタグが使えますので、例え
+        ば以下の様なテンプレートにすると、少し表示が華やかになります。
+
+-----ここから
+<blockquote>%tweet%
+<a href="%href%" target="_blank"><span class="small">%time%</span></a></blockquote>
+-----ここまで
+
+
+【おわりに】
 
 本スクリプトの詳細は、はてなダイアリーに記載する予定です。
 
-Sun Nov 15 00:10:13 JST 2009
+Sun Nov 15 07:06:41 JST 2009
 lolicsystem / Chiemimaru Kai
 
 http://d.hatena.ne.jp/lolicsystem
