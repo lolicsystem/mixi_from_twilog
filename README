@@ -75,6 +75,17 @@ service named "twilog", and to insert it in the mixi diary.
     値    ：true ...現在編集中の日記に、つぶやきを上書きします。
             false...現在編集中の日記に、つぶやきを追加します。
 
+    ●ReplyおよびMentionの扱い
+    設定名：greasemonkey.scriptvals.http://github.com/lolicsystem/mixi from twilog.mention
+    値    ：0...Reply(先頭が@のつぶやき)もMention(文中に@がある記事)も
+                取り込みます。
+            1...Replyは取り込みませんが、Mentionは取り込みます。
+            2...デフォルトです。ReplyもMentionも取り込みません。
+
+    ※ @username は、mixiプレミアムに加入している場合、username の
+       twitterホームページへのリンクとなります。非プレミアムの場合は、単
+       なるテキスト表示となります。
+
     ●1日分のつぶやきの整形方法
     設定名：greasemonkey.scriptvals.http://github.com/lolicsystem/mixi from twilog.template
     値    ：整形に使われる関数そのものです。
@@ -83,7 +94,7 @@ service named "twilog", and to insert it in the mixi diary.
 
 本スクリプトの詳細は、はてなダイアリーに記載する予定です。
 
-Thu Nov 12 02:44:46 JST 2009
+Sun Nov 15 00:10:13 JST 2009
 lolicsystem / Chiemimaru Kai
 
 http://d.hatena.ne.jp/lolicsystem

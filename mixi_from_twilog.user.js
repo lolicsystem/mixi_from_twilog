@@ -3,8 +3,9 @@
 // @namespace     http://github.com/lolicsystem
 // @description   mixi from twilog
 // @include       http://mixi.jp/add_diary.pl*
+// @include       http://mixi.jp/edit_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.10
+// @version       0.11
 // ==/UserScript==
 
 (function () {
@@ -62,6 +63,15 @@
     //
     var overwriteMode = GM_getValue("overwrite", true);
     GM_setValue("overwrite", overwriteMode);
+
+    // treatment of mention
+    //
+    var mention = GM_getValue("mention", "2");
+    GM_setValue("mention", mention);
+
+    // premium user?
+    //
+    var isPremium = $X("id('diaryVolume')/p/span")[0].textContent == "1000.0" ? true : false;
 
     // Add twitter icon and input fields to the page
     //
@@ -157,24 +167,27 @@
     // Make twilog URL
     //
     function twilogUrl() {
-        var url = "http://twilog.org/" + tn.value +
-                  "/date-" + da.value + "/asc-nomen";
-        return url;
-    }
-    // Make twilog update URL
-    //
-    function twilogUpdateUrl() {
-        var url = "http://twilog.org/update.cgi?id=" + tn.value +
-                  "&order=&filter=&kind=reg";
-        return url;
+        var ms;
+        switch (mention) {
+        case "0":
+            ms = '';
+            break;
+        case "1":
+            ms = 'norep';
+            break;
+        default:
+            ms = 'nomen';
+            break;
+        }
+        return "http://twilog.org/" + tn.value +
+               "/date-" + da.value + "/asc-" + ms;
     }
 
-    // Make twilog update URL (noreg user)
+    // Make twilog update URL
     //
-    function twilogUpdateNoregUrl() {
-        var url = "http://twilog.org/update.cgi?id=" + tn.value +
-                  "&order=asc&filter=nomen&kind=noreg";
-        return url;
+    function twilogUpdateUrl(reg) {
+        return "http://twilog.org/update.cgi?id=" + tn.value +
+               "&order=&filter=&kind=" + reg;
     }
 
     // Get twitter log from twilog.
@@ -211,9 +224,9 @@
             var s = $X("id('order')/following-sibling::node()/span", d);
             var updateUrl;
             if (s != "" && s[0].textContent == "このユーザーはTwilogに登録されていません")
-                updateUrl = twilogUpdateNoregUrl();
+                updateUrl = twilogUpdateUrl("noreg");
             else
-                updateUrl = twilogUpdateUrl();
+                updateUrl = twilogUpdateUrl("reg");
             GM_xmlhttpRequest({
                 method : "GET",
                 url    : updateUrl,
@@ -240,8 +253,8 @@
             var o = {date:date, tweets:[]};
             var t = $X("id('d" + da.value + "')/div[@class='tl-tweet']", d);
             for (var i = 0; i < t.length; i++) {
-                var text   = $X("./p[@class='tl-text']", t[i])[0]
-                             .textContent.replace(/<\/?[^>]+>/gi, '');
+		var text = $X("./p[@class='tl-text']", t[i])[0];
+                var text = isPremium ? text.innerHTML : text.textContent;
                 var posted = $X("./p[@class='tl-posted']/a", t[i])[0];
                 var tweet  = {
                     time: posted.text,
@@ -288,7 +301,7 @@
     function footer() {
         return '--------\n' +
                '※ Powered by "mixi_from_twilog.user.js" !!\n' +
-               '　 (http://github.com/lolicsystem/mixi_from_twilog)';
+               '　 (http://wiki.github.com/lolicsystem/mixi_from_twilog)';
     }
 
     function rendering(t) {

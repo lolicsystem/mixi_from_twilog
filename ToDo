@@ -1,3 +1,8 @@
+2009-11-14  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* 設定編集画面を新設
+	- about:config をユーザに触らせるのをやめる。
+
 2009-11-11  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* 整形処理の内容をカスタマイズ可能に (20091112完了)
@@ -5,7 +10,7 @@
 
 2009-11-10  Chiemimaru Kai  <lolicsystem@gmail.com>
 
-	* @やRT付き投稿の扱いを選択可能に
+	* @やRT付き投稿の扱いを選択可能に (20091114完了)
 
 2009-11-09  Chiemimaru Kai  <lolicsystem@gmail.com>
 

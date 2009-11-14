@@ -1,3 +1,12 @@
+2009-11-14  Chiemimaru Kai  <lolicsystem@gmail.com>
+
+	* v0.11
+	- ReplyおよびMentionの扱いを選択可能にした。
+	- add_diaryだけでなく、edit_diaryもスクリプト適用対象とした。
+	- ユーザがmixi premiumに加入しているかどうかを判断し、premiumユー
+	  ザの場合は、@ 表示が該当ユーザのtwitterホームページへのリンク
+	  となるようにした。
+
 2009-11-12  Chiemimaru Kai  <lolicsystem@gmail.com>
 
 	* v0.10
