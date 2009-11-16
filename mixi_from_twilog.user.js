@@ -5,7 +5,7 @@
 // @include       http://mixi.jp/add_diary.pl*
 // @include       http://mixi.jp/edit_diary.pl*
 // @author        Chiemimaru Kai (lolicsystem)
-// @version       0.12
+// @version       0.12.1
 // ==/UserScript==
 
 (function () {
@@ -72,6 +72,10 @@
     // premium user?
     //
     var isPremium = $X("id('diaryVolume')/p/span")[0].textContent == "1000.0" ? true : false;
+
+    // ConfigBox appear?
+    //
+    var isConfigBoxAppear = false;
 
     // Add twitter icon and input fields to the page
     //
@@ -182,6 +186,8 @@
     }
 
     function appendConfigBox() {
+        if (isConfigBoxAppear)
+            return;
         var co = configBox();
         if (overwriteMode) {
             $X("id('overwritetrue')", co)[0].checked = 'checked';
@@ -203,11 +209,15 @@
         $X("id('configsubmit')", co)[0].addEventListener('click', function(){return configSubmit(true);},true);
         $X("id('configcancel')", co)[0].addEventListener('click', function(){return configSubmit(false);},true);
         target.appendChild(co);
+        isConfigBoxAppear = true;
     }
 
     function removeConfigBox() {
-        var p = $X("id('config')")[0];
-        target.removeChild(p);
+        if (isConfigBoxAppear) {
+            var p = $X("id('config')")[0];
+            target.removeChild(p);
+            isConfigBoxAppear = false;
+        }
     }
 
     function configSubmit(submit) {
